@@ -59,16 +59,16 @@ $$N_\epsilon(p) = \{q \in \mathcal{D} \mid d_{\text{haversine}}(p, q) \le \epsil
 
 ---
 
-## 📱 Kiến trúc Ứng dụng (Multi-Page Navigation)
+## 📱 Kiến trúc Ứng dụng & 6 Phân hệ Trực quan hóa Học thuật
 
-Ứng dụng chia thành 4 phân hệ chính điều hướng qua Sidebar:
+Ứng dụng chia thành 4 phân hệ chính điều hướng qua Sidebar, tích hợp **6 Module Trực quan hóa Học thuật Nâng cao**:
 
-| Phân hệ | Chức năng chính |
-| :--- | :--- |
-| **Page 1: Cơ sở lý thuyết & DGP** | Trình bày bối cảnh ITS, công thức toán học (`st.latex`), 3 giả thuyết nghiên cứu ($H_1, H_2, H_3$) và Data Dictionary chuẩn xác. |
-| **Page 2: Pipeline & Tiền xử lý** | Hai tabs **Raw Data** & **Cleaned Data**. Toggle bật/tắt bộ lọc nhiễu GPS Bounding Box, dị biệt tốc độ và hiển thị `st.code()` pipeline minh bạch. |
-| **Page 3: Khai phá & Bản đồ** | Global Filters (Giờ, Thời tiết, Phương tiện). Biểu đồ phân phối tốc độ Plotly Histogram tùy biến bin size. Bản đồ điểm đen giao thông Folium tích hợp **DBSCAN** và **MarkerCluster**. |
-| **Page 4: Kiểm định Thống kê** | Lựa chọn biến tương tác, tự động chạy $\chi^2$-test hoặc Welch's t-test, in Contingency table, hiển thị $p$-value bằng `st.metric()`, kết luận màu xanh (`st.success`) khi $p < 0.05$ và màu đỏ (`st.error`) khi $p \ge 0.05$. |
+| Phân hệ | Module Trực quan hóa Học thuật Bổ sung | Mô tả Kỹ thuật & Chuẩn Toán học |
+| :--- | :--- | :--- |
+| **Page 1: Cơ sở lý thuyết & DGP** | **Theoretical Foundation & Data Dictionary** | Trình bày bối cảnh ITS, công thức toán học (`st.latex`), 3 giả thuyết nghiên cứu ($H_1, H_2, H_3$) và Data Dictionary chuẩn xác. |
+| **Page 2: Pipeline & Tiền xử lý** | **1. Data Pipeline Flowchart (Graphviz)** | Sơ đồ luồng dữ liệu động (`st.graphviz_chart`): `[Dữ liệu thô: 5,000 dòng] -> [Lọc GPS: -80] -> [Lọc Tốc độ: -60] -> [NaN: -45] -> [Dữ liệu sạch: 4,815 dòng]`. Tự động cập nhật số liệu thời gian thực. |
+| **Page 3: Khai phá & Bản đồ** | **2. Bar Chart with Error Bars (Bootstrap CI 95%)**<br>**3. Dual Histogram (Linear vs Log10)**<br>**4. Spearman Correlation Heatmap**<br>**5. Algorithm Evaluation (Silhouette Curve)** | • `go.Bar` với vạch sai số `error_y` tính từ 1,000 mẫu Bootstrap (Khoảng tin cậy 95%).<br>• `make_subplots(rows=1, cols=2)` so sánh phân phối tốc độ thang Tuyến tính vs thang Logarit làm lộ rõ đuôi lệch phải.<br>• `go.Heatmap` ma trận tương quan phi tham số Spearman giữa 4 biến định lượng.<br>• Biểu đồ độ gãy thuật toán: Đường cong Silhouette Score theo bán kính Epsilon (DBSCAN) có đánh dấu cấu hình chọn. |
+| **Page 4: Kiểm định Thống kê** | **6. Sensitivity Analysis (Phân tích Độ nhạy)**<br>**Inferential Testing (χ² & Welch's t-test)** | • Biểu đồ thanh ngang (`go.Bar(orientation='h')`) so sánh **Trung vị Tốc độ Vi phạm** qua 3 kịch bản: (a) Dữ liệu thô $\rightarrow$ (b) Lọc GPS $\rightarrow$ (c) Lọc GPS + Cắt Outlier P99; làm rõ tính bền vững (robustness) của Trung vị so với Trung bình.<br>• Bảng Contingency, kiểm định Chi-Square và Welch's t-test với phán quyết màu trực quan. |
 
 ---
 
@@ -76,11 +76,12 @@ $$N_\epsilon(p) = \{q \in \mathcal{D} \mid d_{\text{haversine}}(p, q) \le \epsil
 
 - **Ngôn ngữ**: Python 3.10+
 - **Giao diện & Ứng dụng**: [Streamlit](https://streamlit.io/)
+- **Sơ đồ Luồng Động**: [Graphviz](https://graphviz.org/) (`st.graphviz_chart`)
 - **Thao tác Dữ liệu**: [Pandas](https://pandas.pydata.org/), [NumPy](https://numpy.org/)
 - **Hệ thống Không gian & Bản đồ**: [Folium](https://python-visualization.github.io/folium/), [Streamlit-Folium](https://github.com/randyzwitch/streamlit-folium)
-- **Trực quan hóa Dữ liệu**: [Plotly Express & Graph Objects](https://plotly.com/python/)
-- **Học máy & Phân cụm**: [Scikit-learn](https://scikit-learn.org/) (DBSCAN with BallTree & Haversine metric)
-- **Thống kê Suy diễn**: [SciPy](https://scipy.org/) (`scipy.stats.chi2_contingency`, `scipy.stats.ttest_ind`)
+- **Trực quan hóa Dữ liệu Học thuật**: [Plotly Express, Graph Objects & Subplots](https://plotly.com/python/)
+- **Học máy & Phân cụm**: [Scikit-learn](https://scikit-learn.org/) (DBSCAN with BallTree & Haversine metric, Silhouette Score)
+- **Thống kê Suy diễn & Bootstrap**: [SciPy](https://scipy.org/) (`chi2_contingency`, `ttest_ind`, Spearman correlation, Bootstrap resampling)
 
 ---
 
