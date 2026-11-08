@@ -491,6 +491,14 @@ def render_page_data_pipeline(df_raw: pd.DataFrame):
 
         st.markdown("**Bảng mẫu 10 bản ghi dữ liệu thô:**")
         st.dataframe(df_raw.head(10), use_container_width=True)
+        
+        st.download_button(
+            label="💾 Tải xuống File Dữ liệu Thô (traffic_violations_raw.csv)",
+            data=df_raw.to_csv(index=False).encode("utf-8-sig"),
+            file_name="traffic_violations_raw.csv",
+            mime="text/csv",
+            help="Tải toàn bộ 5,000 bản ghi dữ liệu vi phạm thô dạng CSV"
+        )
 
         st.markdown("**Bản ghi bất thường tiêu biểu phát hiện được:**")
         anomalies_sample = df_raw[invalid_gps | invalid_spd].head(6)
@@ -546,6 +554,14 @@ def clean_traffic_pipeline(df: pd.DataFrame) -> pd.DataFrame:
 
             st.markdown("**Bảng dữ liệu sạch sau xử lý:**")
             st.dataframe(df_cleaned.head(10), use_container_width=True)
+            
+            st.download_button(
+                label="💾 Tải xuống File Dữ liệu Đã Làm Sạch (traffic_violations_cleaned.csv)",
+                data=df_cleaned.to_csv(index=False).encode("utf-8-sig"),
+                file_name="traffic_violations_cleaned.csv",
+                mime="text/csv",
+                help="Tải toàn bộ bản ghi dữ liệu đã lọc nhiễu dạng CSV"
+            )
 
             st.markdown("**Thống kê mô tả các biến định lượng sau làm sạch:**")
             st.dataframe(

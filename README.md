@@ -88,10 +88,13 @@ $$N_\epsilon(p) = \{q \in \mathcal{D} \mid d_{\text{haversine}}(p, q) \le \epsil
 
 ```text
 TRAFFIC-DATA-SYSTEM/
-├── .gitignore             # Quy tắc loại trừ tệp rác, cache, môi trường ảo
-├── requirements.txt       # Danh sách dependencies chuẩn phiên bản
-├── app.py                 # Toàn bộ mã nguồn ứng dụng Streamlit (Production-ready)
-└── README.md              # Tài liệu chi tiết về dự án và hướng dẫn sử dụng
+├── .gitignore                     # Quy tắc loại trừ tệp rác, cache, môi trường ảo
+├── requirements.txt               # Danh sách dependencies chuẩn phiên bản
+├── app.py                         # Toàn bộ mã nguồn ứng dụng Streamlit (Production-ready)
+├── traffic_violations.csv         # Dữ liệu gốc nạp vào ứng dụng (5,000 bản ghi thô)
+├── traffic_violations_raw.csv     # Bản sao lưu dữ liệu thô phục vụ kiểm toán
+├── traffic_violations_cleaned.csv # Dữ liệu sau tiền xử lý & làm sạch (4,815 bản ghi)
+└── README.md                      # Tài liệu chi tiết về dự án và hướng dẫn sử dụng
 ```
 
 ---
