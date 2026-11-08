@@ -922,11 +922,27 @@ def render_page_spatial_eda(df_clean: pd.DataFrame):
         center_lat = float(df_clustering_sample["vi_do"].median())
         center_lon = float(df_clustering_sample["kinh_do"].median())
         
+        # Sử dụng OpenStreetMap làm nền mặc định (100% Free, Không yêu cầu API Key, không watermark)
         m = folium.Map(
             location=[center_lat, center_lon],
             zoom_start=12,
-            tiles="CartoDB positron"
+            tiles="OpenStreetMap"
         )
+        
+        # Thêm các lớp bản đồ phụ trợ miễn phí (không yêu cầu API Key)
+        folium.TileLayer(
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            attr="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+            name="Bản đồ Vệ tinh (Esri Satellite)",
+            control=True
+        ).add_to(m)
+        
+        folium.TileLayer(
+            tiles="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+            attr='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>',
+            name="Bản đồ Giao thông & Địa hình (OSM HOT)",
+            control=True
+        ).add_to(m)
         
         palette = [
             "#E11D48", "#2563EB", "#059669", "#D97706", "#7C3AED",
@@ -988,7 +1004,9 @@ def render_page_spatial_eda(df_clean: pd.DataFrame):
                     tooltip=f"Tâm Điểm Đen Cụm #{c} (N={len(c_df)})"
                 ).add_to(m)
         
+        folium.LayerControl(position="topright", collapsed=True).add_to(m)
         st_folium(m, width="100%", height=550, returned_objects=[])
+        st.caption(f"Nguồn dữ liệu: Dữ liệu mô phỏng | Phân tích không gian trên tập n = {n_sample_cluster:,} | Lớp nền: OpenStreetMap & Esri")
     else:
         st.info("ℹ️ Chế độ bản đồ dự phòng Plotly (Để trải nghiệm bản đồ Folium + MarkerCluster, vui lòng cài đặt: pip install folium streamlit-folium).")
         fig_map = px.scatter_mapbox(
